@@ -1,0 +1,8 @@
+Android-notify-lite: A replacement for the android-notifier-desktop
+application, written in Go.
+
+ANL requires the Remote Notifications application to be installed on your
+android phone, and libnotify/notify-send installed on your computer. 
+
+For now, it only works with the "Global Broadcast" option. 
+Encryption works.
