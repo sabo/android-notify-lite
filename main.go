@@ -27,7 +27,7 @@ package main
 import (
 "fmt"
 "os"
-"exec"
+"os/exec"
 "net"
 "strings"
 "bytes"
