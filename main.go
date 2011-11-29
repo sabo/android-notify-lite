@@ -1,51 +1,28 @@
-/*
-Copyright (c) 2011, G. Ryan Sablosky
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer.
-Redistributions in binary form must reproduce the above copyright notice, this
-list of conditions and the following disclaimer in the documentation and/or
-other materials provided with the distribution.
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
 
 package main
 
 import (
-"fmt"
-"os"
-"os/exec"
-"net"
-"strings"
-"bytes"
-"flag"
+	"bytes"
+	"flag"
+	"fmt"
+	"net"
+	"os"
+	"os/exec"
+	"strings"
 
-"crypto/aes"
-"crypto/cipher"
-"crypto/md5"
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/md5"
 
-"github.com/kless/goconfig/config"
+	"github.com/kless/goconfig/config"
 )
 
 type packetV2 struct {
 	deviceId  string
 	noteId    string
 	eventType string
-	data       string
-	contents   string
+	data      string
+	contents  string
 }
 
 var trustId string
@@ -84,7 +61,6 @@ func decryptMessage(key []byte, ciphertext *bytes.Buffer) (buf *bytes.Buffer) {
 	return out
 }
 
-
 //Sends a notification using exec and the "notify-send" program.
 func sendNotify(msg packetV2, icon string) error {
 	switch {
@@ -101,7 +77,7 @@ func sendNotify(msg packetV2, icon string) error {
 	}
 
 	cmd := exec.Command("notify-send",
-	"-i", icon, msg.eventType, msg.contents)
+		"-i", icon, msg.eventType, msg.contents)
 
 	cmdErr := cmd.Run()
 	return cmdErr
@@ -129,7 +105,7 @@ func splitPacket(input string) packetV2 {
 }
 
 func loadConfig() *config.Config {
-	configDirs := strings.Split(os.Getenv("XDG_CONFIG_HOME") + ":"	+ os.Getenv("XDG_CONFIG_DIRS"), ":")
+	configDirs := strings.Split(os.Getenv("XDG_CONFIG_HOME")+":"+os.Getenv("XDG_CONFIG_DIRS"), ":")
 	for _, d := range configDirs {
 		cfg, _ := config.ReadDefault(d + "/android-notify-lite/config")
 		if cfg != nil {
@@ -137,7 +113,7 @@ func loadConfig() *config.Config {
 			return cfg
 		}
 	}
-	cfg, _ := config.ReadDefault(os.Getenv("HOME")+"/.android-notify-lite")
+	cfg, _ := config.ReadDefault(os.Getenv("HOME") + "/.android-notify-lite")
 	configLocation = os.Getenv("HOME") + "/.android-notify-lite"
 	if cfg == nil {
 		fmt.Println("Error: No configuration file found.")
@@ -159,7 +135,7 @@ func main() {
 
 	if trustId != "" {
 		c.RemoveOption("Notify", "trusted_ids")
-		c.AddOption("Notify", "trusted_ids", rawTrustedIds + "\n" + trustId)
+		c.AddOption("Notify", "trusted_ids", rawTrustedIds+"\n"+trustId)
 		c.WriteFile(configLocation, 0600, "Device ID added")
 		fmt.Println("ID added to config file.")
 		os.Exit(1)
@@ -189,7 +165,7 @@ func main() {
 				sendNotify(*packet, iconDir)
 			} else {
 				fmt.Printf("Messaged received w/ unknown device id %s",
-				packet.deviceId)
+					packet.deviceId)
 			}
 		}
 	} else {
