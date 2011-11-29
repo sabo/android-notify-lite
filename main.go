@@ -1,4 +1,7 @@
-
+//	android-notify-lite provides a lightweight replacement for the Java-based
+//	android-notifier-desktop remote notificationator thingy. To be of any use
+//	at all, it should be installed on a system with libnotify/notify-send, and
+//	requires an Android phone with the Remote Notifier application installed
 package main
 
 import (
@@ -17,6 +20,7 @@ import (
 	"github.com/kless/goconfig/config"
 )
 
+//Data type for the received packet
 type packetV2 struct {
 	deviceId  string
 	noteId    string
@@ -25,6 +29,7 @@ type packetV2 struct {
 	contents  string
 }
 
+//Flags. -t adds the inputted device ID to the config file.
 var trustId string
 var configLocation string
 
@@ -83,6 +88,8 @@ func sendNotify(msg packetV2, icon string) error {
 	return cmdErr
 }
 
+//Helper function that is only used once, in a probably not-idiomatic way.
+//Should probably find a way to replace.
 func elem(input string, list []string) bool {
 	for _, v := range list {
 		if input == v {
@@ -104,6 +111,7 @@ func splitPacket(input string) packetV2 {
 	return packetV2{pkt[1], pkt[2], pkt[3], pkt[4], pkt[5]}
 }
 
+//Searches for, and loads, a configuration file.
 func loadConfig() *config.Config {
 	configDirs := strings.Split(os.Getenv("XDG_CONFIG_HOME")+":"+os.Getenv("XDG_CONFIG_DIRS"), ":")
 	for _, d := range configDirs {
