@@ -43,7 +43,7 @@ func init() {
 func doDigest(in []byte) []byte {
 	hash := md5.New()
 	hash.Write(in)
-	return hash.Sum()
+	return hash.Sum(nil)
 }
 
 //Generates the key from the passphrase by hashing it 10 times.
