@@ -1,0 +1,6 @@
+[Notify]
+icon_dir: 
+broadcast_addr: 255.255.255.255
+decrypt: false 
+passphrase: 
+trusted_ids: 0123456789abcdef
