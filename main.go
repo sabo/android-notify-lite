@@ -39,6 +39,10 @@ func init() {
 	flag.Parse()
 }
 
+func printerr(in error) {
+	fmt.Println("ERROR: ", in)
+}
+
 //Creates an MD5 digest from a byte string.
 func doDigest(in []byte) []byte {
 	hash := md5.New()
@@ -59,7 +63,10 @@ func passphraseToKey(passphrase string) []byte {
 //Decrypt a message.
 func decryptMessage(key []byte, ciphertext *bytes.Buffer) (buf *bytes.Buffer) {
 	iv := doDigest(key)
-	aescrypt, _ := aes.NewCipher(key)
+	aescrypt, aes_err := aes.NewCipher(key)
+	if aes_err != nil {
+		printerr(aes_err)
+	}
 	cipher := cipher.NewCBCDecrypter(aescrypt, iv)
 	out := bytes.NewBuffer(make([]byte, 512))
 	cipher.CryptBlocks(out.Bytes(), ciphertext.Bytes())
@@ -177,7 +184,7 @@ func main() {
 			}
 		}
 	} else {
-		fmt.Println("Error with network connection: ", netErr)
+		printerr(netErr)
 		os.Exit(1)
 	}
 }
