@@ -137,6 +137,18 @@ func loadConfig() *config.Config {
 	return cfg
 }
 
+//returns a dictionary that contains the IDs and the human-readable names of
+//the allowed phones.
+/*
+func parseIds(c config.Config) map [string] string {
+	tuples := strings.Split(c.String("Notify", "trusted_ids"), "\n")
+	out := make(map[string] string)
+	for _, v := range tuples {
+		t := strings.Split(v, ", ")
+		out[t[1]] = t[0]
+	}
+	return out
+}*/
 func main() {
 	//Load configuration info
 	c := loadConfig()
